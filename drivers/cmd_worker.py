@@ -3,7 +3,7 @@ from shutil import get_terminal_size
 from threading import Thread
 from time import sleep
 
-from drivers.internet_manager import get_list_of_repos
+from drivers.internet_manager import get_list_of_repos, get_list_of_installed
 from constants import *
 
 
@@ -52,10 +52,24 @@ class Loader:
 def choose_repo_to_install():
     print('All repos to install:')
     repos = get_list_of_repos()
-    print('\n'.join(map(lambda x: f'{x[0] + 1}. {x[1][0]}', enumerate(repos))))
+    print('\n'.join(map(lambda x: f'{x[0] + 1}. {x[1][0]}'
+                                  + (f' - {x[1][2]}' if x[1][2] else ''),
+                        enumerate(repos))))
     com = int(input('Choose repo: '))
     print('-' * 10)
     return repos, com
+
+
+def choose_repo_to_run():
+    print('All repos to run:')
+    repos = get_list_of_installed()
+    print('\n'.join(map(lambda x: f'{x[0] + 1}. {x[1]}', enumerate(repos))))
+    exit_index = len(repos) + 1
+    print(f'{exit_index}. exit')
+    com = int(input('Choose repo: '))
+    if com == exit_index:
+        print('-' * 10)
+    return repos, com, com == exit_index
 
 
 def index_page():
